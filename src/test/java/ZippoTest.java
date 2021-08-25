@@ -82,4 +82,48 @@ public class ZippoTest {
 
         ;
     }
+
+    @Test
+    public void bodyJsonPathTest2() {
+        given()
+                .when()
+                .get("http://api.zippopotam.us/us/90210")
+
+                .then()
+                .log().body()
+                .body("places[0].'place name'", equalTo("Beverly Hills"))
+                .statusCode(200)
+
+        ;
+    }
+
+    @Test
+    public void hasSizeTest() {
+        given()
+                .when()
+                .get("http://api.zippopotam.us/us/90210")
+
+                .then()
+                .log().body()
+                .body("places", hasSize(1))
+                .statusCode(200)
+
+        ;
+    }
+
+    @Test
+    public void combineTest() {
+        given()
+                .when()
+                .get("http://api.zippopotam.us/us/90210")
+
+                .then()
+                .log().body()
+                .body("places", hasSize(1))
+                .body("places.state", hasItem("California"))
+                .body("places[0].'place name'", equalTo("Beverly Hills"))
+                .statusCode(200)
+
+        ;
+    }
 }
