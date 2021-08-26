@@ -1,5 +1,19 @@
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.builder.ResponseSpecBuilder;
+import io.restassured.filter.log.LogDetail;
+import io.restassured.http.ContentType;
+import io.restassured.response.ResponseBody;
+import io.restassured.response.ResponseBodyData;
+import io.restassured.response.ResponseBodyExtractionOptions;
+import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.ResponseSpecification;
+import org.testng.Assert;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.util.List;
+
+import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
@@ -74,4 +88,74 @@ public class GoRest {
             ;
         }
     }
+
+    private ResponseSpecification responseSpecification;
+    private RequestSpecification requestSpecification;
+
+    @BeforeTest
+    public void setup() {
+        baseURI = "https://gorest.co.in/public/v1";
+
+        requestSpecification = new RequestSpecBuilder()
+                .log(LogDetail.URI)
+                .setAccept(ContentType.JSON)
+                .build();
+
+        responseSpecification = new ResponseSpecBuilder()
+                .expectStatusCode(200)
+                .expectContentType(ContentType.JSON)
+                .log(LogDetail.BODY)
+                .build();
+    }
+
+    @Test
+    public void extractingJsonPathInt() {
+
+        int limit =
+                given()
+                        .param("page", 1)
+
+                        .when()
+                        .get("/users")
+
+                        .then()
+                        .spec(responseSpecification)
+                        .extract().path("meta.pagination.limit")
+                ;
+        System.out.println("limit = " + limit);
+    }
+
+    @Test
+    public void extractingJsonPathIntList() {
+
+        List<Integer> id =
+                given()
+                        .param("page", 1)
+
+                        .when()
+                        .get("/users")
+
+                        .then()
+                        .extract().path("data.id")
+                ;
+        System.out.println("id = " + id);
+    }
+
+    @Test
+    public void extractingJsonPathStringList() {
+
+        List<String> name =
+                given()
+                        .param("page", 1)
+
+                        .when()
+                        .get("/users")
+
+                        .then()
+                        .extract().path("data.name")
+                ;
+        System.out.println("name = " + name);
+        Assert.assertTrue(name.contains("Malini"));
+    }
+
 }
