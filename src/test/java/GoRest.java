@@ -2,9 +2,6 @@ import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.http.ContentType;
-import io.restassured.response.ResponseBody;
-import io.restassured.response.ResponseBodyData;
-import io.restassured.response.ResponseBodyExtractionOptions;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 import org.testng.Assert;
@@ -155,7 +152,7 @@ public class GoRest {
                         .extract().path("data.name")
                 ;
         System.out.println("name = " + name);
-        Assert.assertTrue(name.contains("Malini"));
+        Assert.assertTrue(name.contains("Helene"));
     }
 
 }
