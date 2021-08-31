@@ -117,8 +117,7 @@ public class GoRest {
 
                         .then()
                         .spec(responseSpecification)
-                        .extract().path("meta.pagination.limit")
-                ;
+                        .extract().path("meta.pagination.limit");
         System.out.println("limit = " + limit);
     }
 
@@ -133,8 +132,7 @@ public class GoRest {
                         .get("/users")
 
                         .then()
-                        .extract().path("data.id")
-                ;
+                        .extract().path("data.id");
         System.out.println("id = " + id);
     }
 
@@ -149,10 +147,34 @@ public class GoRest {
                         .get("/users")
 
                         .then()
-                        .extract().path("data.name")
-                ;
+                        .extract().path("data.name");
         System.out.println("name = " + name);
         Assert.assertTrue(name.contains("Helene"));
     }
+
+    @Test
+    public void goRestUsers() {
+
+        List<User> users =
+                given()
+
+
+                        .when()
+                        .get("/users")
+
+
+                        .then()
+                        .statusCode(200)
+                        .contentType(ContentType.JSON)
+                        .log().body()
+                        .extract().jsonPath().getList("data", User.class);
+
+
+        for (User user: users){
+            System.out.println("user = " + user);
+        }
+    }
+
+
 
 }
