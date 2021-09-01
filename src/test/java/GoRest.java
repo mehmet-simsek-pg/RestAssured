@@ -7,6 +7,7 @@ import io.restassured.specification.ResponseSpecification;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+import tasks.User;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 
 public class GoRest {
+
 
     @Test
     public void pathParamTest2() {
