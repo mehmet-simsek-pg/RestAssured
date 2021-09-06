@@ -1,4 +1,4 @@
-package tasks;
+package goRest;
 
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
@@ -8,8 +8,10 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+import tasks.User;
 
 import java.util.HashMap;
 import java.util.List;
@@ -69,7 +71,7 @@ public class GoRestUserTask {
         return mail + "@gmail.com";
     }
 
-    @Test(dependsOnMethods = "createUser",priority = 1)
+    @Test(dependsOnMethods = "createUser", priority = 1)
     public void getUserById() {
         given()
                 .pathParam("userId", userId)
@@ -84,7 +86,7 @@ public class GoRestUserTask {
         ;
     }
 
-    @Test(dependsOnMethods = "createUser",priority = 2)
+    @Test(dependsOnMethods = "createUser", priority = 2)
     public void updateUserById() {
 
         String newName = "necdet";
@@ -105,7 +107,7 @@ public class GoRestUserTask {
         ;
     }
 
-    @Test(dependsOnMethods = "createUser",priority = 3)
+    @Test(dependsOnMethods = "createUser", priority = 3)
     public void deleteUserById() {
         given()
                 .header("Authorization", "Bearer c2c25a97ad7a65b80c7a7f94a8b485a34b7b94831d6bb37f88b818a2c27a13cd")
@@ -138,8 +140,7 @@ public class GoRestUserTask {
     }
 
     @Test
-    public void responseSample()
-    {
+    public void responseSample() {
         Response response =
                 given()
 
@@ -149,31 +150,30 @@ public class GoRestUserTask {
                         .then()
                         .statusCode(200)
                         .contentType(ContentType.JSON)
-                        .extract().response()
-                ;
-
+                        .extract().response();
 
 
         List<User> userList = response.jsonPath().getList("data", User.class);
         int total = response.jsonPath().getInt("meta.pagination.total");
-        int limit=response.jsonPath().getInt("meta.pagination.limit");
-        User user= response.jsonPath().getObject("data[0]", User.class);
+        int limit = response.jsonPath().getInt("meta.pagination.limit");
+        User user = response.jsonPath().getObject("data[0]", User.class);
 
 
-        System.out.println("users size="+userList.size());
-        System.out.println("total="+ total);
+        System.out.println("users size=" + userList.size());
+        System.out.println("total=" + total);
         System.out.println("limit = " + limit);
-        System.out.println("user="+user);
+        System.out.println("user=" + user);
     }
+
     @Test
     public void createUserWithMap() {
 
-        Map<String,String>user=new HashMap<>();
+        Map<String, String> user = new HashMap<>();
 
-        user.put("name","mehmet");
-        user.put("gender","male");
-        user.put("email",getRandomEmail());
-        user.put("status","active");
+        user.put("name", "mehmet");
+        user.put("gender", "male");
+        user.put("email", getRandomEmail());
+        user.put("status", "active");
 
         userId =
                 given()
@@ -196,11 +196,13 @@ public class GoRestUserTask {
     @Test
     public void createUserWithObject() {
 
-       User user=new User();
-       user.setName("mehmet");;
-       user.setGender("male");;
-       user.setEmail(getRandomEmail());
-       user.setStatus("active");
+        User user = new User();
+        user.setName("mehmet");
+        ;
+        user.setGender("male");
+        ;
+        user.setEmail(getRandomEmail());
+        user.setStatus("active");
 
         userId =
                 given()
@@ -219,4 +221,70 @@ public class GoRestUserTask {
         ;
         System.out.println("userID = " + userId);
     }
+
+    @Test
+    public void commonTest() {
+
+        Response response =
+                given()
+
+
+                        .when()
+                        .get("/comments")
+
+                        .then()
+                        .extract().response();
+
+        List<Data> dataList = response.jsonPath().getList("data", Data.class);
+        for (Data data : dataList)
+            System.out.println(data);
+
+        List<String> mails = response.jsonPath().getList("data.email");
+
+        Assert.assertTrue(mails.contains("embranthiri_swarnalata@kuhic.info"));
+
+
+    }
+
+    @Test
+    public void commonTest2() {
+
+        Comment comments =
+                given()
+                        .when()
+                        .get("/comments")
+
+                        .then()
+                        .extract().as(Comment.class);
+
+
+
+        System.out.println("comments = " + comments);
+
+    }
+
+    @Test
+    public void createComment() {
+
+        Data data=new Data();
+        data.setName("Mehmet");
+        data.setEmail(getRandomEmail());
+        data.setBody("Hello World");
+
+
+                given()
+                        .header("Authorization", "Bearer c2c25a97ad7a65b80c7a7f94a8b485a34b7b94831d6bb37f88b818a2c27a13cd")
+                        .contentType(ContentType.JSON)
+                        .body(data)
+
+                        .when()
+                        .post("/posts/123/comments")
+
+                        .then()
+                        .log().body()
+        ;
+    }
+
+
+
 }
