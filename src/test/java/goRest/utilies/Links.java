@@ -1,4 +1,4 @@
-package goRest;
+package goRest.utilies;
 
 public class Links {
     private String previous, current, next;

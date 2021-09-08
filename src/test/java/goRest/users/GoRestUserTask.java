@@ -1,17 +1,10 @@
-package goRest;
+package goRest.users;
 
-import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.builder.ResponseSpecBuilder;
-import io.restassured.filter.log.LogDetail;
+import goRest.baseSetup.BaseSetup;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
-import io.restassured.specification.ResponseSpecification;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.testng.Assert;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import tasks.User;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,26 +14,7 @@ import java.util.Map;
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
-public class GoRestUserTask {
-
-    private ResponseSpecification responseSpecification;
-    private RequestSpecification requestSpecification;
-
-    @BeforeTest
-    public void setup() {
-        baseURI = "https://gorest.co.in/public/v1";
-
-        requestSpecification = new RequestSpecBuilder()
-                .log(LogDetail.URI)
-                .setAccept(ContentType.JSON)
-                .build();
-
-        responseSpecification = new ResponseSpecBuilder()
-                .expectStatusCode(200)
-                .expectContentType(ContentType.JSON)
-                .log(LogDetail.BODY)
-                .build();
-    }
+public class GoRestUserTask extends BaseSetup {
 
     int userId;
 
@@ -221,70 +195,6 @@ public class GoRestUserTask {
         ;
         System.out.println("userID = " + userId);
     }
-
-    @Test
-    public void commonTest() {
-
-        Response response =
-                given()
-
-
-                        .when()
-                        .get("/comments")
-
-                        .then()
-                        .extract().response();
-
-        List<Data> dataList = response.jsonPath().getList("data", Data.class);
-        for (Data data : dataList)
-            System.out.println(data);
-
-        List<String> mails = response.jsonPath().getList("data.email");
-
-        Assert.assertTrue(mails.contains("embranthiri_swarnalata@kuhic.info"));
-
-
-    }
-
-    @Test
-    public void commonTest2() {
-
-        Comment comments =
-                given()
-                        .when()
-                        .get("/comments")
-
-                        .then()
-                        .extract().as(Comment.class);
-
-
-
-        System.out.println("comments = " + comments);
-
-    }
-
-    @Test
-    public void createComment() {
-
-        Data data=new Data();
-        data.setName("Mehmet");
-        data.setEmail(getRandomEmail());
-        data.setBody("Hello World");
-
-
-                given()
-                        .header("Authorization", "Bearer c2c25a97ad7a65b80c7a7f94a8b485a34b7b94831d6bb37f88b818a2c27a13cd")
-                        .contentType(ContentType.JSON)
-                        .body(data)
-
-                        .when()
-                        .post("/posts/123/comments")
-
-                        .then()
-                        .log().body()
-        ;
-    }
-
 
 
 }
