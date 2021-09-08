@@ -1,6 +1,6 @@
-package goRest;
+package goRest.comments;
 
-public class Data {
+public class Comments {
 
     private int id;
     private int post_id;

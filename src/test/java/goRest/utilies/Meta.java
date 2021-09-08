@@ -1,4 +1,4 @@
-package goRest;
+package goRest.utilies;
 
 public class Meta {
     Pagination pagination;

@@ -1,4 +1,4 @@
-package tasks;
+package goRest.users;
 
 public class User {
 

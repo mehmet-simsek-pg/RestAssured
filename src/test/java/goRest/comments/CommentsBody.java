@@ -1,11 +1,13 @@
-package goRest;
+package goRest.comments;
+
+import goRest.utilies.Meta;
 
 import java.util.List;
 
-public class Comment {
+public class CommentsBody {
 
     private Meta meta;
-    private List<Data> data;
+    private List<Comments> data;
 
   public Meta getMeta() {
     return meta;
@@ -15,11 +17,11 @@ public class Comment {
     this.meta = meta;
   }
 
-  public List<Data> getData() {
+  public List<Comments> getData() {
     return data;
   }
 
-  public void setData(List<Data> data) {
+  public void setData(List<Comments> data) {
     this.data = data;
   }
 
